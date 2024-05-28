@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Keyin-JUnit-Demo.iml" filepath="$PROJECT_DIR$/.idea/Keyin-JUnit-Demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Keyin-JUnit-Demo.iml" filepath="$PROJECT_DIR$/Keyin-JUnit-Demo.iml" />
     </modules>
   </component>
 </project>
