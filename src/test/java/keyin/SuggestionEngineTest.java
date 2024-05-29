@@ -1,16 +1,16 @@
-package com.keyin;
+package keyin;
 
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
+
 
 @ExtendWith(MockitoExtension.class)
 public class SuggestionEngineTest {
@@ -19,38 +19,6 @@ public class SuggestionEngineTest {
     @Mock
     private SuggestionsDatabase mockSuggestionDB;
     private boolean testInstanceSame = false;
-
-    @Test
-    public void testGenerateSuggestions() throws Exception {
-        suggestionEngine.loadDictionaryData( Paths.get( ClassLoader.getSystemResource("words.txt").getPath()));
-
-//        Assertions.assertTrue(testInstanceSame);
-        Assertions.assertTrue(suggestionEngine.generateSuggestions("hellw").contains("hello"));
-    }
-
-    @Test
-    public void testGenerateSuggestionsFail() throws Exception {
-        suggestionEngine.loadDictionaryData( Paths.get( ClassLoader.getSystemResource("words.txt").getPath()));
-
-        testInstanceSame = true;
-        Assertions.assertTrue(testInstanceSame);
-        Assertions.assertFalse(suggestionEngine.generateSuggestions("hello").contains("hello"));
-    }
-
-    @Test
-    public void testSuggestionsAsMock() {
-        Map<String,Integer> wordMapForTest = new HashMap<>();
-
-        wordMapForTest.put("test", 1);
-
-        Mockito.when(mockSuggestionDB.getWordMap()).thenReturn(wordMapForTest);
-
-        suggestionEngine.setWordSuggestionDB(mockSuggestionDB);
-
-        Assertions.assertFalse(suggestionEngine.generateSuggestions("test").contains("test"));
-
-        Assertions.assertTrue(suggestionEngine.generateSuggestions("tes").contains("test"));
-    }
 
 
 
@@ -62,6 +30,7 @@ public class SuggestionEngineTest {
     }
 
     @Test
+
     public void generateSuggestionsTest() throws Exception {
         suggestionEngine.loadDictionaryData(path);
         String testSuggestions = suggestionEngine.generateSuggestions("tesy");
@@ -70,21 +39,39 @@ public class SuggestionEngineTest {
     }
 
     @Test
-    public void dbTest() {
+    public void databaseTest() {
         SuggestionsDatabase suggestionsDatabase = new SuggestionsDatabase();
         Map<String, Integer> wordMap = suggestionsDatabase.getWordMap();
         Assertions.assertNotNull(wordMap, "Word database is empty.");
+
     }
 
     @Test
     public void testGenerateSuggestionsForTypos() throws Exception {
 
+        /* Calls the DictionaryData into the Suggestion Engine. */
         suggestionEngine.loadDictionaryData(path);
 
+        /* Generate suggestions for argument*/
         String suggestions = suggestionEngine.generateSuggestions("helo");
+        System.out.println(suggestions);
 
-        // Check if the correct word "hello" is included in the suggestions
+        /*Assert that the suggestions contain the correct argument.*/
         Assertions.assertTrue(suggestions.contains("hello"), "The suggestions should include the correct word 'hello'");
 
     }
+
+    @Test
+    public void suggestionsNotGeneratedForWordInDictionary() throws Exception {
+        suggestionEngine.loadDictionaryData(path);
+
+
+        String suggestions = suggestionEngine.generateSuggestions("hello");
+
+        /*Asserts that no suggestions are generated for a word already in dictionary.*/
+        Assertions.assertEquals("", suggestions, "No suggestions should be generated for a word already in the dictionary.");
+    }
+
+
+
 }

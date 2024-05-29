@@ -1,6 +1,7 @@
-package com.keyin;
+package keyin;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,7 +45,7 @@ public class SuggestionEngine {
      * @throws IOException a any file loading problems
      */
     public void loadDictionaryData(Path dictionaryFile) throws IOException {
-        Stream.of(new String(Files.readAllBytes( dictionaryFile )).toLowerCase().split("\\n")).forEach( (word) ->{
+        Stream.of(new String(Files.readAllBytes( dictionaryFile )).toLowerCase().split( "[\r\n]+")).forEach( (word) ->{
             getWordSuggestionDB().compute( word, (k, v) -> v == null ? 1 : v + 1  );
         });
     }
@@ -98,8 +99,14 @@ public class SuggestionEngine {
         }
 
         SuggestionEngine suggestionEngine = new SuggestionEngine();
-        suggestionEngine.loadDictionaryData(Paths.get( ClassLoader.getSystemResource("words.txt").getPath()));
+
+        // Convert the resource URL to a Path object
+        URI uri = ClassLoader.getSystemResource("words.txt").toURI();
+        Path path = Paths.get(uri);
+
+        suggestionEngine.loadDictionaryData(path);
 
         System.out.println(suggestionEngine.generateSuggestions(args[0]));
     }
 }
+

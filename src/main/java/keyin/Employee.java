@@ -1,4 +1,4 @@
-package com.keyin;
+package keyin;
 
 import java.util.Objects;
 
